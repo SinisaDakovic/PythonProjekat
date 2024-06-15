@@ -1,10 +1,13 @@
 from screen import *
 import abc
 import os
+from opening_screen import is_pieces_set_one
 
-WHITE_PIECES_PATH = os.path.join(PICTURES_PATH, 'white_pieces')
-BLACK_PIECES_PATH = os.path.join(PICTURES_PATH, 'black_pieces')
+def get_white_pieces_path(is_pieces_set_one):
+    return os.path.join(PICTURES_PATH, 'white_pieces' if is_pieces_set_one else 'white_pieces_set_2')
 
+def get_black_pieces_path(is_pieces_set_one):
+    return os.path.join(PICTURES_PATH, 'black_pieces' if is_pieces_set_one else 'black_pieces_set_2')
 
 class Piece(metaclass=abc.ABCMeta):
     BASIC_SCORE = 0
@@ -66,6 +69,8 @@ class Piece(metaclass=abc.ABCMeta):
 
 
 class King(Piece):
+    WHITE_PIECES_PATH = get_white_pieces_path(is_pieces_set_one)
+    BLACK_PIECES_PATH =get_black_pieces_path(is_pieces_set_one)
     BASIC_SCORE = 2000
     WHITE_IMAGE = pygame.image.load(os.path.join(WHITE_PIECES_PATH, 'white_king.png'))
     BLACK_IMAGE = pygame.image.load(os.path.join(BLACK_PIECES_PATH, 'black_king.png'))
@@ -95,6 +100,8 @@ class King(Piece):
 
 
 class Pawn(Piece):
+    WHITE_PIECES_PATH = get_white_pieces_path(is_pieces_set_one)
+    BLACK_PIECES_PATH =get_black_pieces_path(is_pieces_set_one)
     BASIC_SCORE = 100
     LINE_OF_WHITE_PAWNS = 1
     LINE_OF_BLACK_PAWNS = 6
@@ -165,6 +172,8 @@ class Pawn(Piece):
 
 
 class Knight(Piece):
+    WHITE_PIECES_PATH = get_white_pieces_path(is_pieces_set_one)
+    BLACK_PIECES_PATH =get_black_pieces_path(is_pieces_set_one)
     BASIC_SCORE = 320
     BLACK_IMAGE = pygame.image.load(os.path.join(BLACK_PIECES_PATH, 'black_knight.png'))
     WHITE_IMAGE = pygame.image.load(os.path.join(WHITE_PIECES_PATH, 'white_knight.png'))
@@ -190,6 +199,8 @@ class Knight(Piece):
 
 
 class Rook(Piece):
+    WHITE_PIECES_PATH = get_white_pieces_path(is_pieces_set_one)
+    BLACK_PIECES_PATH =get_black_pieces_path(is_pieces_set_one)
     BASIC_SCORE = 500
     WHITE_IMAGE = pygame.image.load(os.path.join(WHITE_PIECES_PATH, 'white_rook.png'))
     BLACK_IMAGE = pygame.image.load(os.path.join(BLACK_PIECES_PATH, 'black_rook.png'))
@@ -207,6 +218,8 @@ class Rook(Piece):
 
 
 class Bishop(Piece):
+    WHITE_PIECES_PATH = get_white_pieces_path(is_pieces_set_one)
+    BLACK_PIECES_PATH =get_black_pieces_path(is_pieces_set_one)
     BASIC_SCORE = 330
     WHITE_IMAGE = pygame.image.load(os.path.join(WHITE_PIECES_PATH, 'white_bishop.png'))
     BLACK_IMAGE = pygame.image.load(os.path.join(BLACK_PIECES_PATH, 'black_bishop.png'))
@@ -224,6 +237,8 @@ class Bishop(Piece):
 
 
 class Queen(Piece):
+    WHITE_PIECES_PATH = get_white_pieces_path(is_pieces_set_one)
+    BLACK_PIECES_PATH = get_black_pieces_path(is_pieces_set_one)
     BASIC_SCORE = 900
     BLACK_IMAGE = pygame.image.load(os.path.join(BLACK_PIECES_PATH, 'black_queen.png'))
     WHITE_IMAGE = pygame.image.load(os.path.join(WHITE_PIECES_PATH, 'white_queen.png'))

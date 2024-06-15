@@ -30,15 +30,25 @@ PICTURES_PATH = 'pictures'
 NUMBER_OF_SQUARES = 8
 SCORE_BOARD = pygame.Surface((SCREEN_WIDTH, HEIGHT_OF_SCOREBOARD))
 
-REGULAR_FONT = pygame.font.SysFont('comicsansms', 30)
+REGULAR_FONT = pygame.font.SysFont('TimesNewRoman', 30)
 LARGE_FONT = pygame.font.Font('freesansbold.ttf', 80)
 
 SPACE_BETWEEN_BOARD_AND_EATEN_PIECES = 100
 
 GAME_LENGTH_OPTION = (1, 3, 5, 10)
 
-LIGHT_SQUARE_COLOR = colors.LIGHT_BLUE
-DARK_SQUARE_COLOR = colors.DARK_BLUE
+# LIGHT_SQUARE_COLOR = colors.LIGHT_BLUE
+# DARK_SQUARE_COLOR = colors.DARK_BLUE
+
+RESET_BUTTON_WIDTH = 150
+RESET_BUTTON_HEIGHT = 50
+RESET_BUTTON_COLOR = colors.LIGHT_SILVER
+RESET_BUTTON_TEXT_COLOR = colors.BLACK
+RESET_BUTTON_TEXT = "Reset"
+
+RESET_BUTTON_POS_X = BOARD_SIDE + SPACE_BETWEEN_BOARD_AND_EATEN_PIECES
+RESET_BUTTON_POS_Y = int((SCREEN_HEIGHT + SCORE_BOARD.get_height()) / 2 - RESET_BUTTON_HEIGHT / 2)
+
 
 
 class Square:
@@ -62,7 +72,7 @@ class Square:
 
     def coloring_square_by_original_color(self):
         if self.color == self.original_color:
-            if self.original_color == DARK_SQUARE_COLOR:
+            if self.original_color == colors.DARK_BLUE:
                 self.color = colors.DARK_RED
             else:
                 self.color = colors.LIGHT_RED
@@ -75,6 +85,9 @@ class Square:
 
 def add_squares_to_board():
     # at the begging of the game, draw and init the squares.
+    from opening_screen import is_board_set_one
+    LIGHT_SQUARE_COLOR = colors.LIGHT_BLUE if is_board_set_one else colors.WHITE
+    DARK_SQUARE_COLOR = colors.DARK_BLUE if is_board_set_one else colors.BLACK
 
     bg_image = pygame.image.load(os.path.join(PICTURES_PATH, 'main_background.jpg'))
     screen.blit(bg_image, (0, HEIGHT_OF_SCOREBOARD))
@@ -215,6 +228,17 @@ def draw_eaten_pieces(white_team: Team, black_team: Team):
         screen.blit(image, (x, rect.top))
         x += size
 
+
+def draw_reset_button():
+    pygame.draw.rect(screen, RESET_BUTTON_COLOR, (RESET_BUTTON_POS_X, RESET_BUTTON_POS_Y, RESET_BUTTON_WIDTH, RESET_BUTTON_HEIGHT))
+    text = REGULAR_FONT.render(RESET_BUTTON_TEXT, True, RESET_BUTTON_TEXT_COLOR)
+    text_rect = text.get_rect(center=(RESET_BUTTON_POS_X + RESET_BUTTON_WIDTH / 2, RESET_BUTTON_POS_Y + RESET_BUTTON_HEIGHT / 2))
+    screen.blit(text, text_rect)
+    return pygame.Rect(RESET_BUTTON_POS_X, RESET_BUTTON_POS_Y, RESET_BUTTON_WIDTH, RESET_BUTTON_HEIGHT)
+
+
+
+reset_button_rect = draw_reset_button() 
 
 def draw_winner(team_won):
     text = f"Team won is {team_won}"

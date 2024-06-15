@@ -27,6 +27,11 @@ SOUNDS_PATH = 'sounds'
 PASSIVE_TEXTBOX_COLOR = colors.WHITE
 ACTIVE_TEXTBOX_COLOR = colors.LIGHT_BLUE
 
+PIECES_SET_RECT_WIDTH = 200
+PIECES_SET_RECT_HEIGHT = 100
+PIECES_SET_RECT_PADDING = 20
+
+
 
 BOT_GAME_TYPE = 1
 ONLINE_GAME_TYPE = 2
@@ -43,12 +48,17 @@ ONLINE_GAME = 5
 BACK_BUTTON = 8
 JOIN_GAME_RECTS = 9
 REFRESH_BUTTON = 10
+PIECES_SET = 11
+BOARD_SET = 12 
+
 
 MAX_USERNAME_LENGTH = 10
 
 ONE_RECT_GROUPS = [START_GAME, ONLINE_GAME, BACK_BUTTON, REFRESH_BUTTON]
 
 # default values
+is_board_set_one = True
+is_pieces_set_one = False
 is_one_players_playing = True
 game_length = 5  # In minutes.
 level = 3  # Bot Depth
@@ -77,7 +87,7 @@ def starting_screen():
     screen.blit(bg_image, (0, 0))
 
     # Print title.
-    text = LARGE_FONT.render("BeCheZ", False, colors.YELLOW)
+    text = LARGE_FONT.render("Sahmaster", False, colors.YELLOW)
     screen.blit(text, (SCREEN_WIDTH / 2 - text.get_width() / 2, 50))
 
     rectangles = set_rectangles()
@@ -321,7 +331,34 @@ def set_rectangles():
 
     # Passing the 'one player' rect as argument to the function.
     rectangles[TEAM_SELECTION] = draw_team_selection_rects(rectangles[NUMBER_OF_PLAYERS]["One Player"].midright, is_white)
+    rectangles[PIECES_SET] = draw_pieces_set_selection_rects()
+    rectangles[BOARD_SET] = draw_board_set_selection_rects()
+
+
+
     return rectangles
+
+
+def draw_board_set_selection_rects():
+    rects = dict()
+    current_print_height = 500
+    pieces_set_one = pygame.Rect(RECT_WIDTH , current_print_height, RECT_WIDTH, RECT_HEIGHT)
+    pygame.draw.rect(screen, colors.LIGHT_SILVER, pieces_set_one)
+    text = "BOARD SET 1"
+    text_surface = REGULAR_FONT.render(text, False, colors.BLACK)
+    screen.blit(text_surface, (pieces_set_one.centerx - text_surface.get_width() / 2,
+                               pieces_set_one.centery - text_surface.get_height() / 2))
+    current_print_height += 200
+    rects[text] = pieces_set_one
+
+    pieces_set_two = pygame.Rect(RECT_WIDTH , current_print_height, RECT_WIDTH, RECT_HEIGHT)
+    pygame.draw.rect(screen, colors.DARK_SILVER, pieces_set_two)
+    text = "BOARD SET 2"
+    text_surface = REGULAR_FONT.render(text, False, colors.BLACK)
+    screen.blit(text_surface, (pieces_set_two.centerx - text_surface.get_width() / 2,
+                               pieces_set_two.centery - text_surface.get_height() / 2))
+    rects[text] = pieces_set_two
+    return rects
 
 
 def handle_event(event, rectangles):
@@ -380,6 +417,9 @@ def set_team(rect_clicked, text, rectangles):
     is_white = True if text == "WHITE TEAM" else False
     set_rects_color(rectangles[TEAM_SELECTION], rect_clicked,
                        colors.LIGHT_SILVER, colors.DARK_SILVER, colors.BLACK)
+    
+
+
 
 
 def back_to_last_screen(*ignore):
@@ -394,6 +434,7 @@ def set_number_of_players(rect_clicked, text, rectangles):
     global is_one_players_playing
     global game_type
     is_one_players_playing = (text == 'One Player')
+
     if is_one_players_playing:
         # Passing the 'one player' rect as argument to the function.
         draw_team_selection_rects(rectangles[NUMBER_OF_PLAYERS]["One Player"].midright, is_white)
@@ -420,6 +461,12 @@ def set_game_length(rect_clicked, text, rectangles):
     global game_length
     game_length = int(text)
     set_rects_color(rectangles[GAME_LENGTH], rect_clicked, colors.RED, colors.DARK_RED)
+
+def set_board(rect_clicked, text, rectangles):
+    global is_board_set_one
+    is_board_set_one = True if text == "BOARD SET 1" else False
+    set_rects_color(rectangles[BOARD_SET], rect_clicked,
+                       colors.LIGHT_SILVER, colors.DARK_SILVER, colors.BLACK)
     
     
 def create_small_rects(title, options, default, color, chosen_color, is_left):
@@ -505,6 +552,28 @@ def draw_team_selection_rects(one_player_rect_cords, isWhite=True):
     return rects
 
 
+def draw_pieces_set_selection_rects():
+    rects = dict()
+    current_print_height = 150
+    pieces_set_one = pygame.Rect(RECT_WIDTH , current_print_height, RECT_WIDTH, RECT_HEIGHT)
+    pygame.draw.rect(screen, colors.LIGHT_SILVER, pieces_set_one)
+    text = "PIECES SET 1"
+    text_surface = REGULAR_FONT.render(text, False, colors.BLACK)
+    screen.blit(text_surface, (pieces_set_one.centerx - text_surface.get_width() / 2,
+                               pieces_set_one.centery - text_surface.get_height() / 2))
+    current_print_height += 200
+    rects[text] = pieces_set_one
+
+    pieces_set_two = pygame.Rect(RECT_WIDTH , current_print_height, RECT_WIDTH, RECT_HEIGHT)
+    pygame.draw.rect(screen, colors.DARK_SILVER, pieces_set_two)
+    text = "PIECES SET 2"
+    text_surface = REGULAR_FONT.render(text, False, colors.BLACK)
+    screen.blit(text_surface, (pieces_set_two.centerx - text_surface.get_width() / 2,
+                               pieces_set_two.centery - text_surface.get_height() / 2))
+    rects[text] = pieces_set_two
+    return rects
+
+
 def set_rects_color(rects_and_texts: dict, chosen_rect, chosen_rect_color, unchosen_rect_color,
                        text_color=colors.WHITE):
     for text, rect in rects_and_texts.items():
@@ -536,6 +605,12 @@ def draw_and_get_refresh_button():
                        refresh_button_image.get_width(), refresh_button_image.get_width())
 
 
+def set_pieces(rect_clicked, text, rectangles):
+    global is_pieces_set_one
+    is_pieces_set_one = True if text == "PIECES SET 1" else False
+    set_rects_color(rectangles[PIECES_SET], rect_clicked, colors.LIGHT_SILVER, colors.DARK_SILVER, colors.BLACK)
+
+
 rect_group_to_function = dict()
 rect_group_to_function[START_GAME] = finish_starting_screen
 rect_group_to_function[NUMBER_OF_PLAYERS] = set_number_of_players
@@ -546,4 +621,7 @@ rect_group_to_function[ONLINE_GAME] = online_screen
 rect_group_to_function[BACK_BUTTON] = back_to_last_screen
 rect_group_to_function[JOIN_GAME_RECTS] = join_to
 rect_group_to_function[REFRESH_BUTTON] = join_game_screen
+rect_group_to_function[PIECES_SET] = set_pieces
+rect_group_to_function[BOARD_SET] = set_board
+
 

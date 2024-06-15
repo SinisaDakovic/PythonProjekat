@@ -134,6 +134,10 @@ def event_handler(event, piece_clicked, game_type):
     if event.type != pygame.MOUSEBUTTONDOWN:
         return piece_clicked
 
+    if event.type == pygame.MOUSEBUTTONDOWN:
+        if screen.reset_button_rect.collidepoint(event.pos):
+            opening_screen.starting_screen() 
+
     # User clikced on something.
     clicked_square = get_square_clicked()
 
@@ -179,6 +183,7 @@ def game_loop(game_type, my_team, bot_depth=0):
     white_team.timer.resume()
     piece_clicked = None
     screen.draw_bg(team_got_turn, team_doesnt_got_turn)
+    screen.draw_reset_button() 
 
     while True:
         if team_got_turn is not my_team and game_type == opening_screen.BOT_GAME_TYPE:
@@ -210,6 +215,8 @@ def  quit_from_sever(client_socket: socket.socket):
     quit_request = protocol.Request(opening_screen.username, protocol.QUIT).set_request_to_server()
     opening_screen.my_socket.send(quit_request)
     client_socket.close()
+
+
 
 
 def main():
